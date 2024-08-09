@@ -10,7 +10,7 @@
   - name: installing mongodb org
     ansible.builtin.dnf:
       name: mongodb-org
-      status: present
+      state: present
 
   - name: Enable service mongo
     ansible.builtin.systemd_service:
