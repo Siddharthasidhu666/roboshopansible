@@ -1,5 +1,5 @@
 - name: installing web
-  hosts: mongo
+  hosts: web
   become: yes
   tasks:
   - name: Install Nginx
