@@ -19,6 +19,6 @@
 
   - name: Remove file (delete file)
     ansible.builtin.file:
-    path: /usr/share/nginx/html/
-    state: absent
+      path: /usr/share/nginx/html/
+      state: absent
     
