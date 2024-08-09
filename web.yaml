@@ -30,7 +30,7 @@
   - name: Download web app
     ansible.builtin.get_url:
       url: https://roboshop-builds.s3.amazonaws.com/web.zip
-      dest: /tmp
+      dest: /tmp/web.zip
 
   - name: Unarchive a file that is already on the remote machine
     ansible.builtin.unarchive:
