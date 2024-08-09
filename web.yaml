@@ -21,4 +21,27 @@
     ansible.builtin.file:
       path: /usr/share/nginx/html/
       state: absent
+
+  - name: create html directory
+    ansible.builtin.file:
+      path: /usr/share/nginx/html
+      state: directory
+
+  - name: Download web app
+    ansible.builtin.get_url:
+      url: https://roboshop-builds.s3.amazonaws.com/web.zip
+      dest: /tmp
+
+  - name: Unarchive a file that is already on the remote machine
+    ansible.builtin.unarchive:
+      src: /tmp
+      dest: /usr/share/nginx/html
+      remote_src: yes
+
+  - name: reStart service nginx
+    ansible.builtin.service:
+      name: nginx
+      state: restarted
+
+    
     
