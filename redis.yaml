@@ -1,0 +1,31 @@
+- name: installing redis
+  hosts: redis
+  become: yes
+  tasks:
+  - name: install redis
+    ansible.builtin.shell: dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
+  - name: install redis
+    ansible.builtin.shell: dnf module enable redis:remi-6.2 -y
+
+  - name: install
+    ansible.built.dnf:
+      name: redis 
+      state: present
+
+  - name: Replace a string in a file
+    ansible.builtin.replace:
+      path: /etc/redis.conf
+      regexp: '127.0.0.1'
+      replace: '0.0.0.0'
+
+  - name: Enable service redis
+    ansible.builtin.systemd_service:
+      name: redis
+      enabled: true
+
+  - name: Start service redis
+    ansible.builtin.service:
+      name: redis
+      state: started
+
+  
