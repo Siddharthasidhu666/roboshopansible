@@ -1,0 +1,76 @@
+- name: installing user
+  hosts: user
+  become: yes
+  tasks:
+  - name: enable and disable
+    ansible.builtin.shell: dnf module disable nodejs -y ; dnf module enable nodejs:18 -y
+
+  - name: Install nodejs
+    ansible.builtin.dnf:
+      name: nodejs
+      state: present
+
+  - name: useradd
+    ansible.builtin.shell: useradd roboshop
+    ignore_errors: true
+    
+  - name: Create a directory if it does not exist
+    ansible.builtin.file:
+      path: /app
+      state: directory
+
+  - name: Download catalogue app
+    ansible.builtin.get_url:
+      url: https://roboshop-builds.s3.amazonaws.com/user.zip
+      dest: /tmp/
+
+  - name: Unarchive a file that is already on the remote machine
+    ansible.builtin.unarchive:
+      src: /tmp/user.zip
+      dest: /app
+      remote_src: yes
+
+  - name: install
+    ansible.builtin.shell: npm install 
+    args:
+      chdir: /app
+
+  - name: copying file
+    ansible.builtin.copy:
+      src: user.service
+      dest: /etc/systemd/system/user.service
+
+  - name:  daemon-reload 
+    ansible.builtin.systemd_service:
+      daemon_reload: true
+
+  - name: Enable service user
+    ansible.builtin.systemd_service:
+      name: user
+      enabled: true
+
+  - name: Start service user
+    ansible.builtin.service:
+      name: user
+      state: started
+
+
+  - name: copying repo
+    ansible.builtin.copy:
+      src: mongo.repo
+      dest: /etc/yum.repos.d/mongo.repo
+      
+  - name: installing mongodb org
+    ansible.builtin.dnf:
+      name: mongodb-org-shell
+      state: present
+
+  - name: Load Schema
+    ansible.builtin.shell: mongo --host mongodb.siddhu.xyz </app/schema/user.js
+  
+
+
+  
+
+  
+  
